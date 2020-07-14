@@ -10,7 +10,10 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 });
 
 exports.getScreams = functions.https.onRequest((req, res) => {
-    admin.firestore().collection('screams').get()
+    admin
+        .firestore()
+        .collection("screams")
+        .get()
         .then(data => {
             let screams = [];
             data.forEach(doc => {
@@ -18,5 +21,5 @@ exports.getScreams = functions.https.onRequest((req, res) => {
             });
             return res.json(screams);
         })
-        .chatch(err => console.error(err));
-})
+        .catch(err => console.error(err));
+});
