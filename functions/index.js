@@ -4,7 +4,11 @@ const app = require('express')();
 
 const FBAuth = require('./util/fbAuth');
 
-const { getAllScreams, postOneScream, getScream } = require('./handlers/screams');
+const {
+    getAllScreams,
+    postOneScream,
+    getScream,
+    commentOnScream } = require('./handlers/screams');
 const {
     signup,
     login,
@@ -21,6 +25,7 @@ app.get('/scream/:screamId', getScream);
 //TODO: like scream
 //TODO: unlike scream
 //TODO: comment on scream
+app.post('/scream/:screamId/comment', FBAuth, commentOnScream)
 
 
 
