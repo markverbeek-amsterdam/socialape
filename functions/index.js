@@ -55,7 +55,7 @@ exports.createNotificationsOnLike = functions.region('europe-west1').firestore.d
     .onCreate((snapshot) => {
         return db.doc(`/screams/${snapshot.data().screamId}`).get()
             .then(doc => {
-                if (doc.exists) {
+                if (doc.exists && doc.data().userHandle !== snapshot.data().userHandle) {
                     return db.doc(`/notifications/${snapshot.id}`).set({
                         createdAt: new Date().toISOString(),
                         recipient: doc.data().userHandle,
@@ -92,7 +92,7 @@ exports.createNotificationsOnComment = functions
         return db.doc(`/screams/${snapshot.data().screamId}`)
             .get()
             .then(doc => {
-                if (doc.exists) {
+                if (doc.exists && doc.data().userHandle !== snapshot.data().userHandle) {
                     return db.doc(`/notifications/${snapshot.id}`).set({
                         createdAt: new Date().toISOString(),
                         recipient: doc.data().userHandle,
