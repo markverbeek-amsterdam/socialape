@@ -53,7 +53,7 @@ exports.api = functions.region('europe-west1').https.onRequest(app);
 
 exports.createNotificationsOnLike = functions.region('europe-west1').firestore.document('likes/{id}')
     .onCreate((snapshot) => {
-        db.doc(`/screams/${snapshot.data().screamId}`).get()
+        return db.doc(`/screams/${snapshot.data().screamId}`).get()
             .then(doc => {
                 if (doc.exists) {
                     return db.doc(`/notifications/${snapshot.id}`).set({
@@ -66,23 +66,16 @@ exports.createNotificationsOnLike = functions.region('europe-west1').firestore.d
                     });
                 }
             })
-            .then(() => {
-                return;
-            })
-            .catch((err) => {
-                return;
-            });
+            .catch((err) =>
+                console.error(err));
     });
 
 exports.deleteNotificationOnUnlike = functions
     .region('europe-west1')
     .firestore.document('likes/{id}')
     .onDelete((snapshot) => {
-        db.doc(`/notifications/${snapshot.id}`)
+        return db.doc(`/notifications/${snapshot.id}`)
             .delete()
-            .then(() => {
-                return;
-            })
             .catch(err => {
                 console.error(err);
                 return;
@@ -96,7 +89,8 @@ exports.createNotificationsOnComment = functions
     .region('europe-west1')
     .firestore.document('comments/{id}')
     .onCreate((snapshot) => {
-        db.doc(`/screams/${snapshot.data().screamId}`).get()
+        return db.doc(`/screams/${snapshot.data().screamId}`)
+            .get()
             .then(doc => {
                 if (doc.exists) {
                     return db.doc(`/notifications/${snapshot.id}`).set({
@@ -108,9 +102,6 @@ exports.createNotificationsOnComment = functions
                         screamId: doc.id
                     });
                 }
-            })
-            .then(() => {
-                return;
             })
             .catch((err) => {
                 return;
